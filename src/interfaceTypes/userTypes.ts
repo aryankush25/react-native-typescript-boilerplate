@@ -1,4 +1,6 @@
+export interface CurrentUserTypes {}
+
 export interface UserDataReducerTypes {
-  userData: {};
+  userData: CurrentUserTypes;
   loginSpinner: boolean;
 }

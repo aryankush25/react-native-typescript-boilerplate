@@ -1,9 +1,9 @@
 import actionTypes from '../actionTypes';
-import { UserDataReducerTypes } from '../../interfaceTypes';
+import { UserDataReducerTypes, CurrentUserTypes } from '../../interfaceTypes';
 
 export interface ActionType {
   type: String;
-  payload: any;
+  payload: CurrentUserTypes;
 }
 
 const initialState: UserDataReducerTypes = {
