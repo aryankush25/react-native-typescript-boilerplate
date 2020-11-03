@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux';
+import StoreState from '../utils/StoreTypes';
 
 import userData from './userData';
 
-const allReducers = combineReducers({
+const allReducers = combineReducers<StoreState>({
   userData,
 });
 
