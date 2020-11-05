@@ -42,7 +42,7 @@ function userData(state = initialState, action: ActionType) {
       return initialState;
 
     default:
-      return { ...state };
+      return state;
   }
 }
 
