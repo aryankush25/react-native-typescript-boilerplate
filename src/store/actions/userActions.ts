@@ -7,10 +7,14 @@ export const requestUserRequest = (username: string, password: string) => {
   };
 };
 
-export const requestUserSuccess = () => {
+export const requestUserSuccess = (
+  username: string,
+  accessToken: string,
+  refreshToken: string,
+) => {
   return {
     type: actionTypes.USER_SUCCESS,
-    payload: {},
+    payload: { username, accessToken, refreshToken },
   };
 };
 
@@ -21,5 +25,11 @@ export const requestUserFailure = () => {
 export const startLogout = () => {
   return {
     type: actionTypes.LOGOUT,
+  };
+};
+
+export const resetUserState = () => {
+  return {
+    type: actionTypes.RESET_USER_STATE,
   };
 };

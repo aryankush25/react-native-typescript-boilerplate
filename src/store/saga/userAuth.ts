@@ -1,6 +1,10 @@
 import { takeLatest, delay, put } from 'redux-saga/effects';
 import actionTypes from '../actionTypes';
-import { requestUserSuccess, requestUserFailure } from '../actions/userActions';
+import {
+  requestUserSuccess,
+  requestUserFailure,
+  resetUserState,
+} from '../actions/userActions';
 
 interface FetchUserActionType {
   type: String;
@@ -18,9 +22,11 @@ function* fetchUserAsync(action: FetchUserActionType) {
 
     console.log({ username, password });
 
+    yield delay(2000);
+
     // Do api call here
 
-    yield put(requestUserSuccess());
+    yield put(requestUserSuccess('react', 'accessToken', 'refreshToken'));
   } catch (error) {
     console.log(error);
     yield put(requestUserFailure());
@@ -33,6 +39,8 @@ export function* logout() {
 
     // To understand debounce functionality Hit logout button multiple times withing 1 second and this console will be only printed once
     console.log('Logout Request');
+
+    yield put(resetUserState());
   } catch (error) {
     console.log(error);
   }

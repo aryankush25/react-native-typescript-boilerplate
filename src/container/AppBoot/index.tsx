@@ -3,13 +3,17 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import 'react-native-gesture-handler';
 import ReduxStore, { persistor } from '../../store';
-import RootNavigator from '../../navigators';
+import AppContainer from '../AppContainer';
+import RootNavigator from '../../RootNavigator';
+import SplashScreen from '../../screens/SplashScreen';
 
 function App() {
   return (
     <Provider store={ReduxStore}>
-      <PersistGate loading={null} persistor={persistor}>
-        <RootNavigator />
+      <PersistGate loading={<SplashScreen />} persistor={persistor}>
+        <AppContainer>
+          <RootNavigator />
+        </AppContainer>
       </PersistGate>
     </Provider>
   );

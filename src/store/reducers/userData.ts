@@ -7,7 +7,11 @@ export interface ActionType {
 }
 
 const initialState: UserDataReducerTypes = {
-  userData: {},
+  userData: {
+    username: '',
+    accessToken: '',
+    refreshToken: '',
+  },
   loginSpinner: false,
 };
 
@@ -34,7 +38,7 @@ function userData(state = initialState, action: ActionType) {
         loginSpinner: false,
       };
     }
-    case actionTypes.LOGOUT:
+    case actionTypes.RESET_USER_STATE:
       return initialState;
 
     default:

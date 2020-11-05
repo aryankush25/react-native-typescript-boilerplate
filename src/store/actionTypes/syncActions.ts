@@ -1,3 +1,3 @@
-const syncActions: string[] = ['LOGOUT'];
+const syncActions: string[] = ['LOGOUT', 'RESET_USER_STATE'];
 
 export default syncActions;
