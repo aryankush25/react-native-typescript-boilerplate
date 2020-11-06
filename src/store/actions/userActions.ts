@@ -8,36 +8,57 @@ export const setCurrentUser = (currentUser: FirebaseAuthTypes.User | null) => {
   };
 };
 
-export const requestUserRequest = (username: string, password: string) => {
+export const signinPhoneNumberRequest = (phoneNumber: string) => {
   return {
-    type: actionTypes.USER_REQUEST,
-    payload: { username, password },
+    type: actionTypes.SIGNIN_PHONE_NUMBER_REQUEST,
+    payload: { phoneNumber },
   };
 };
 
-export const requestUserSuccess = (
-  username: string,
-  accessToken: string,
-  refreshToken: string,
+export const signinPhoneNumberSuccess = (
+  confirmation: FirebaseAuthTypes.ConfirmationResult | null,
 ) => {
   return {
-    type: actionTypes.USER_SUCCESS,
-    payload: { username, accessToken, refreshToken },
+    type: actionTypes.SIGNIN_PHONE_NUMBER_SUCCESS,
+    payload: { confirmation },
   };
 };
 
-export const requestUserFailure = () => {
-  return { type: actionTypes.USER_FAILURE, payload: {} };
+export const signinPhoneNumberFailure = () => {
+  return { type: actionTypes.SIGNIN_PHONE_NUMBER_FAILURE };
 };
 
-export const startLogout = () => {
+export const confirmOtpRequest = (otp: string) => {
   return {
-    type: actionTypes.LOGOUT,
+    type: actionTypes.CONFIRM_OTP_REQUEST,
+    payload: { otp },
   };
 };
 
-export const resetUserState = () => {
+export const confirmOtpSuccess = () => {
   return {
-    type: actionTypes.RESET_USER_STATE,
+    type: actionTypes.CONFIRM_OTP_SUCCESS,
+  };
+};
+
+export const confirmOtpFailure = () => {
+  return { type: actionTypes.CONFIRM_OTP_FAILURE };
+};
+
+export const logoutRequest = () => {
+  return {
+    type: actionTypes.LOGOUT_REQUEST,
+  };
+};
+
+export const logoutSuccess = () => {
+  return {
+    type: actionTypes.LOGOUT_SUCCESS,
+  };
+};
+
+export const logoutFailure = () => {
+  return {
+    type: actionTypes.LOGOUT_FAILURE,
   };
 };

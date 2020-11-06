@@ -1,69 +1,44 @@
-import React, { Fragment, useCallback } from 'react';
+import React, { Fragment, useCallback, useState } from 'react';
 import {
   SafeAreaView,
   ScrollView,
   View,
-  Text,
   StatusBar,
   StyleSheet,
   Button,
+  TextInput,
 } from 'react-native';
-
+import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { useDispatch, useSelector } from 'react-redux';
 import {
-  Header,
-  LearnMoreLinks,
-  DebugInstructions,
-  ReloadInstructions,
-  Colors,
-} from 'react-native/Libraries/NewAppScreen';
-import { useDispatch } from 'react-redux';
-import { requestUserRequest } from '../../store/actions/userActions';
+  signinPhoneNumberRequest,
+  confirmOtpRequest,
+} from '../../store/actions/userActions';
+import { getLoginData } from '../../store/selectors/userSelectors';
+import { isNilOrEmpty } from '../../utils/helper';
 
 const styles = StyleSheet.create({
   scrollView: {
     backgroundColor: Colors.lighter,
   },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
   body: {
     backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
   },
 });
 
 const Login = () => {
   const dispatch = useDispatch();
+  const { confirmation } = useSelector(getLoginData);
+
+  const [opt, setOtp] = useState('');
 
   const handleLoginRequest = useCallback(() => {
-    dispatch(requestUserRequest('react', 'react'));
+    dispatch(signinPhoneNumberRequest('+917017711846'));
   }, [dispatch]);
+
+  const handleConfirmOtpRequest = useCallback(() => {
+    dispatch(confirmOtpRequest(opt));
+  }, [dispatch, opt]);
 
   return (
     <Fragment>
@@ -73,36 +48,21 @@ const Login = () => {
           contentInsetAdjustmentBehavior="automatic"
           style={styles.scrollView}>
           <View style={styles.body}>
-            <Header />
-
-            <Button title="Login" color="black" onPress={handleLoginRequest} />
-
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>Login/index.tsx</Text> to
-                change this screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
+            {isNilOrEmpty(confirmation) ? (
+              <Button
+                title="Login"
+                color="black"
+                onPress={handleLoginRequest}
+              />
+            ) : (
+              <Fragment>
+                <TextInput value={opt} onChangeText={(text) => setOtp(text)} />
+                <Button
+                  title="Confirm Code"
+                  onPress={handleConfirmOtpRequest}
+                />
+              </Fragment>
+            )}
           </View>
         </ScrollView>
       </SafeAreaView>

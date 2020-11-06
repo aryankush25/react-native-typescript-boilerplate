@@ -1,52 +1,76 @@
-import { takeLatest, delay, put } from 'redux-saga/effects';
+import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
+import { takeLatest, put, select } from 'redux-saga/effects';
 import actionTypes from '../actionTypes';
 import {
-  requestUserSuccess,
-  requestUserFailure,
-  resetUserState,
+  signinPhoneNumberSuccess,
+  signinPhoneNumberFailure,
+  confirmOtpSuccess,
+  confirmOtpFailure,
+  logoutSuccess,
+  logoutFailure,
 } from '../actions/userActions';
+import { getLoginData } from '../selectors/userSelectors';
 
-interface FetchUserActionType {
+interface SigninPhoneNumberActionType {
   type: String;
   payload: {
-    username: string;
-    password: string;
+    phoneNumber: string;
   };
 }
 
-function* fetchUserAsync(action: FetchUserActionType) {
+interface ConfirmOtpActionType {
+  type: String;
+  payload: {
+    otp: string;
+  };
+}
+
+function* signinPhoneNumberAsync(action: SigninPhoneNumberActionType) {
   try {
     const {
-      payload: { username, password },
+      payload: { phoneNumber },
     } = action;
 
-    console.log({ username, password });
+    const confirmation: FirebaseAuthTypes.ConfirmationResult | null = yield auth().signInWithPhoneNumber(
+      phoneNumber,
+    );
 
-    yield delay(2000);
-
-    // Do api call here
-
-    yield put(requestUserSuccess('react', 'accessToken', 'refreshToken'));
+    yield put(signinPhoneNumberSuccess(confirmation));
   } catch (error) {
     console.log(error);
-    yield put(requestUserFailure());
+    yield put(signinPhoneNumberFailure());
   }
 }
 
-export function* logout() {
+function* confirmOptAsync(action: ConfirmOtpActionType) {
   try {
-    yield delay(1000); // This is to save multiple requests as saga offers debounce functionality out of the box
+    const {
+      payload: { otp },
+    } = action;
 
-    // To understand debounce functionality Hit logout button multiple times withing 1 second and this console will be only printed once
-    console.log('Logout Request');
+    const { confirmation } = yield select(getLoginData);
 
-    yield put(resetUserState());
+    confirmation && (yield confirmation.confirm(otp));
+
+    yield put(confirmOtpSuccess());
   } catch (error) {
     console.log(error);
+    yield put(confirmOtpFailure());
+  }
+}
+
+export function* logoutAsync() {
+  try {
+    yield auth().signOut();
+
+    yield put(logoutSuccess());
+  } catch (error) {
+    yield put(logoutFailure());
   }
 }
 
 export default [
-  takeLatest(actionTypes.USER_REQUEST, fetchUserAsync),
-  takeLatest(actionTypes.LOGOUT, logout),
+  takeLatest(actionTypes.SIGNIN_PHONE_NUMBER_REQUEST, signinPhoneNumberAsync),
+  takeLatest(actionTypes.CONFIRM_OTP_REQUEST, confirmOptAsync),
+  takeLatest(actionTypes.LOGOUT_REQUEST, logoutAsync),
 ];

@@ -1,16 +1,23 @@
 import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import actionTypes from '../actionTypes';
 import { UserDataReducerTypes } from '../../interfaceTypes';
+import { isPresent } from '../../utils/helper';
 
 export interface ActionType {
   type: String;
-  payload: { currentUser?: FirebaseAuthTypes.User | null };
+  payload: {
+    currentUser: FirebaseAuthTypes.User | null;
+    confirmation: FirebaseAuthTypes.ConfirmationResult | null;
+  };
 }
 
 const initialState: UserDataReducerTypes = {
   initializingCurrentUser: true,
   currentUser: null,
-  loginSpinner: false,
+  signinLoading: false,
+  confirmation: null,
+  otpConfirmLoading: false,
+  logoutLoading: false,
 };
 
 function userData(state = initialState, action: ActionType) {
@@ -22,28 +29,60 @@ function userData(state = initialState, action: ActionType) {
         ...state,
         initializingCurrentUser: false,
         currentUser: payload.currentUser,
+        ...(isPresent(payload.currentUser) && { confirmation: null }),
       };
     }
-    case actionTypes.USER_REQUEST: {
+
+    case actionTypes.SIGNIN_PHONE_NUMBER_REQUEST: {
       return {
         ...state,
-        loginSpinner: true,
+        signinLoading: true,
+        confirmation: null,
       };
     }
-    case actionTypes.USER_SUCCESS: {
+    case actionTypes.SIGNIN_PHONE_NUMBER_SUCCESS: {
       return {
         ...state,
-        loginSpinner: false,
+        signinLoading: false,
+        confirmation: payload.confirmation,
       };
     }
-    case actionTypes.USER_FAILURE: {
+    case actionTypes.SIGNIN_PHONE_NUMBER_FAILURE: {
       return {
         ...state,
-        loginSpinner: false,
+        signinLoading: false,
+        confirmation: null,
       };
     }
-    case actionTypes.RESET_USER_STATE:
-      return initialState;
+
+    case actionTypes.CONFIRM_OTP_REQUEST: {
+      return {
+        ...state,
+        otpConfirmLoading: true,
+      };
+    }
+    case actionTypes.CONFIRM_OTP_SUCCESS:
+    case actionTypes.CONFIRM_OTP_FAILURE: {
+      return {
+        ...state,
+        otpConfirmLoading: false,
+        confirmation: null,
+      };
+    }
+
+    case actionTypes.LOGOUT_REQUEST: {
+      return {
+        ...state,
+        logoutLoading: true,
+      };
+    }
+    case actionTypes.LOGOUT_SUCCESS:
+    case actionTypes.LOGOUT_FAILURE: {
+      return {
+        ...state,
+        logoutLoading: false,
+      };
+    }
 
     default:
       return state;

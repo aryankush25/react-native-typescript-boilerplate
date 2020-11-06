@@ -17,7 +17,7 @@ import {
   Colors,
 } from 'react-native/Libraries/NewAppScreen';
 import { useDispatch } from 'react-redux';
-import { startLogout } from '../../store/actions/userActions';
+import { logoutRequest } from '../../store/actions/userActions';
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -62,7 +62,7 @@ const Home = () => {
   const dispatch = useDispatch();
 
   const handleLogoutRequest = useCallback(() => {
-    dispatch(startLogout());
+    dispatch(logoutRequest());
   }, [dispatch]);
 
   return (
