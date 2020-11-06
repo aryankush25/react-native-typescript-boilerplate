@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>7860917914-mi23gtgghfos4f08mul26qf2bv0p7fsc.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.7860917914-mi23gtgghfos4f08mul26qf2bv0p7fsc</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>7860917914-j55skiptrsafgiqibbfuv0cqdurkavgi.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBPRq3yuY9lh2gfRmEpN15ZUbryk1LG1aM</string>
+	<key>GCM_SENDER_ID</key>
+	<string>7860917914</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>org.reactjs.native.example.MyMusicApp</string>
+	<key>PROJECT_ID</key>
+	<string>my-music-app-55f2c</string>
+	<key>STORAGE_BUCKET</key>
+	<string>my-music-app-55f2c.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:7860917914:ios:f72406f98b95642a003123</string>
+	<key>DATABASE_URL</key>
+	<string>https://my-music-app-55f2c.firebaseio.com</string>
+</dict>
+</plist>
