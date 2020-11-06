@@ -1,4 +1,12 @@
+import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import actionTypes from '../actionTypes';
+
+export const setCurrentUser = (currentUser: FirebaseAuthTypes.User | null) => {
+  return {
+    type: actionTypes.SET_CURRENT_USER,
+    payload: { currentUser },
+  };
+};
 
 export const requestUserRequest = (username: string, password: string) => {
   return {

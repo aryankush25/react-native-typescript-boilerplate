@@ -1,17 +1,15 @@
+import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import actionTypes from '../actionTypes';
-import { UserDataReducerTypes, CurrentUserTypes } from '../../interfaceTypes';
+import { UserDataReducerTypes } from '../../interfaceTypes';
 
 export interface ActionType {
   type: String;
-  payload: CurrentUserTypes;
+  payload: { currentUser?: FirebaseAuthTypes.User | null };
 }
 
 const initialState: UserDataReducerTypes = {
-  userData: {
-    username: '',
-    accessToken: '',
-    refreshToken: '',
-  },
+  initializingCurrentUser: true,
+  currentUser: null,
   loginSpinner: false,
 };
 
@@ -19,6 +17,13 @@ function userData(state = initialState, action: ActionType) {
   const { type, payload } = action;
 
   switch (type) {
+    case actionTypes.SET_CURRENT_USER: {
+      return {
+        ...state,
+        initializingCurrentUser: false,
+        currentUser: payload.currentUser,
+      };
+    }
     case actionTypes.USER_REQUEST: {
       return {
         ...state,
@@ -28,7 +33,6 @@ function userData(state = initialState, action: ActionType) {
     case actionTypes.USER_SUCCESS: {
       return {
         ...state,
-        userData: payload,
         loginSpinner: false,
       };
     }

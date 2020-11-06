@@ -1,10 +1,7 @@
-export interface CurrentUserTypes {
-  username: string;
-  accessToken: string;
-  refreshToken: string;
-}
+import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 
 export interface UserDataReducerTypes {
-  userData: CurrentUserTypes;
+  initializingCurrentUser: boolean;
+  currentUser: FirebaseAuthTypes.User | null;
   loginSpinner: boolean;
 }

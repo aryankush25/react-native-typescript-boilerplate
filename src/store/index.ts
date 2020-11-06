@@ -10,7 +10,7 @@ import StoreState from './utils/StoreTypes';
 const persistConfig = {
   key: 'my-react-native-app-redux',
   storage: AsyncStorage,
-  whitelist: ['userData'],
+  whitelist: [],
 };
 
 const persistedReducer = persistReducer<StoreState>(persistConfig, reducers);

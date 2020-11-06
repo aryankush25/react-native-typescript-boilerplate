@@ -1,21 +1,41 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { createStackNavigator } from '@react-navigation/stack';
+import auth from '@react-native-firebase/auth';
+import { FirebaseAuthTypes } from '@react-native-firebase/auth';
+import SplashScreen from '../screens/SplashScreen';
 import Login from '../screens/Login';
 import Home from '../screens/Home';
-import { getUserTokens } from '../store/selectors/userSelectors';
+import { getCurrentUserData } from '../store/selectors/userSelectors';
 import { isNilOrEmpty } from '../utils/helper';
+import { setCurrentUser } from '../store/actions/userActions';
 
 const Stack = createStackNavigator();
 
 const RootNavigator = () => {
-  const { username, accessToken, refreshToken } = useSelector(getUserTokens);
+  const dispatch = useDispatch();
+  const { initializingCurrentUser, currentUser } = useSelector(
+    getCurrentUserData,
+  );
 
-  if (
-    isNilOrEmpty(username) ||
-    isNilOrEmpty(accessToken) ||
-    isNilOrEmpty(refreshToken)
-  ) {
+  const onAuthStateChanged = useCallback(
+    (currentUserLocal: FirebaseAuthTypes.User | null) => {
+      dispatch(setCurrentUser(currentUserLocal));
+    },
+    [dispatch],
+  );
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+
+    return subscriber;
+  }, [onAuthStateChanged]);
+
+  if (initializingCurrentUser) {
+    return <SplashScreen />;
+  }
+
+  if (isNilOrEmpty(currentUser)) {
     return (
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={Login} />
