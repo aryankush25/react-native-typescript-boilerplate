@@ -1,15 +1,9 @@
 import React, { Fragment, useCallback, useState } from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  View,
-  StatusBar,
-  StyleSheet,
-  Button,
-  TextInput,
-} from 'react-native';
+import { ScrollView, View, StyleSheet, Button, TextInput } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { useDispatch, useSelector } from 'react-redux';
+import CustomButton from '../../components/shared/CustomButton';
+import ImageContainer from '../../container/ImageContainer';
 import {
   signinPhoneNumberRequest,
   confirmOtpRequest,
@@ -18,17 +12,17 @@ import { getLoginData } from '../../store/selectors/userSelectors';
 import { isNilOrEmpty } from '../../utils/helper';
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
   body: {
     backgroundColor: Colors.white,
+    marginHorizontal: '8%',
   },
 });
 
 const Login = () => {
   const dispatch = useDispatch();
-  const { confirmation } = useSelector(getLoginData);
+  const { confirmation, signinLoading, otpConfirmLoading } = useSelector(
+    getLoginData,
+  );
 
   const [opt, setOtp] = useState('');
 
@@ -41,32 +35,28 @@ const Login = () => {
   }, [dispatch, opt]);
 
   return (
-    <Fragment>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <View style={styles.body}>
-            {isNilOrEmpty(confirmation) ? (
-              <Button
-                title="Login"
-                color="black"
-                onPress={handleLoginRequest}
+    <ImageContainer>
+      <ScrollView contentInsetAdjustmentBehavior="automatic">
+        <View style={styles.body}>
+          {isNilOrEmpty(confirmation) ? (
+            <CustomButton
+              text="Send OTP"
+              onPress={handleLoginRequest}
+              loading={signinLoading}
+            />
+          ) : (
+            <Fragment>
+              <TextInput value={opt} onChangeText={(text) => setOtp(text)} />
+              <CustomButton
+                text="Confirm Code"
+                onPress={handleConfirmOtpRequest}
+                loading={otpConfirmLoading}
               />
-            ) : (
-              <Fragment>
-                <TextInput value={opt} onChangeText={(text) => setOtp(text)} />
-                <Button
-                  title="Confirm Code"
-                  onPress={handleConfirmOtpRequest}
-                />
-              </Fragment>
-            )}
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </Fragment>
+            </Fragment>
+          )}
+        </View>
+      </ScrollView>
+    </ImageContainer>
   );
 };
 

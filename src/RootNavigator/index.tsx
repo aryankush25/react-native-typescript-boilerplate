@@ -23,7 +23,7 @@ const RootNavigator = () => {
 
   if (isNilOrEmpty(currentUser)) {
     return (
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName="Login" headerMode="none">
         <Stack.Screen name="Login" component={Login} />
       </Stack.Navigator>
     );
