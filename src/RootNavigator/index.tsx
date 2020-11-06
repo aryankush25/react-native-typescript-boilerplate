@@ -1,35 +1,21 @@
-import React, { useEffect, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { createStackNavigator } from '@react-navigation/stack';
-import auth from '@react-native-firebase/auth';
-import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import SplashScreen from '../screens/SplashScreen';
 import Login from '../screens/Login';
 import Home from '../screens/Home';
-import { getCurrentUserData } from '../store/selectors/userSelectors';
 import { isNilOrEmpty } from '../utils/helper';
-import { setCurrentUser } from '../store/actions/userDataActions';
+import { useCurrentUserAuthHook } from './hooks';
+import { getCurrentUserData } from '../store/selectors/userSelectors';
 
 const Stack = createStackNavigator();
 
 const RootNavigator = () => {
-  const dispatch = useDispatch();
+  useCurrentUserAuthHook();
+
   const { initializingCurrentUser, currentUser } = useSelector(
     getCurrentUserData,
   );
-
-  const onAuthStateChanged = useCallback(
-    (currentUserLocal: FirebaseAuthTypes.User | null) => {
-      dispatch(setCurrentUser(currentUserLocal));
-    },
-    [dispatch],
-  );
-
-  useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-
-    return subscriber;
-  }, [onAuthStateChanged]);
 
   if (initializingCurrentUser) {
     return <SplashScreen />;
