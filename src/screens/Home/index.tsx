@@ -17,7 +17,7 @@ import {
   Colors,
 } from 'react-native/Libraries/NewAppScreen';
 import { useDispatch } from 'react-redux';
-import { logoutRequest } from '../../store/actions/userActions';
+import { logoutRequest } from '../../store/actions/userDataActions';
 
 const styles = StyleSheet.create({
   scrollView: {

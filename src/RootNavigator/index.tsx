@@ -8,7 +8,7 @@ import Login from '../screens/Login';
 import Home from '../screens/Home';
 import { getCurrentUserData } from '../store/selectors/userSelectors';
 import { isNilOrEmpty } from '../utils/helper';
-import { setCurrentUser } from '../store/actions/userActions';
+import { setCurrentUser } from '../store/actions/userDataActions';
 
 const Stack = createStackNavigator();
 

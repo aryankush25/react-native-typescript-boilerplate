@@ -8,7 +8,7 @@ import {
   confirmOtpFailure,
   logoutSuccess,
   logoutFailure,
-} from '../actions/userActions';
+} from '../actions/userDataActions';
 import { getLoginData } from '../selectors/userSelectors';
 
 interface SigninPhoneNumberActionType {

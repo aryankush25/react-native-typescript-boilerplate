@@ -1,6 +1,6 @@
 import { all } from 'redux-saga/effects';
 
-import userAuth from './userAuth';
+import userAuth from './userData';
 
 const tasks = [...userAuth];
 

@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   signinPhoneNumberRequest,
   confirmOtpRequest,
-} from '../../store/actions/userActions';
+} from '../../store/actions/userDataActions';
 import { getLoginData } from '../../store/selectors/userSelectors';
 import { isNilOrEmpty } from '../../utils/helper';
 
