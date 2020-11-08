@@ -16,7 +16,7 @@ interface CustomButtonTypes {
 
 const styles = StyleSheet.create({
   appButtonContainer: {
-    elevation: 8,
+    elevation: 4,
     backgroundColor: 'black',
     borderRadius: 10,
     paddingVertical: 10,

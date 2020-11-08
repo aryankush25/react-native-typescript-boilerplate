@@ -59,7 +59,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   addsOnComponent: {
-    backgroundColor: 'green',
     height: '100%',
   },
 });

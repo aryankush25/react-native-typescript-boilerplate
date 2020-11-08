@@ -1,5 +1,5 @@
 import React, { Fragment, useCallback, useState } from 'react';
-import { ScrollView, View, StyleSheet, TextInput, Text } from 'react-native';
+import { View, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import CustomButton from '../../components/shared/CustomButton';
 import CustomTextInput from '../../components/shared/CustomTextInput';
@@ -10,11 +10,18 @@ import {
 } from '../../store/actions/userDataActions';
 import { getLoginData } from '../../store/selectors/userSelectors';
 import { isNilOrEmpty } from '../../utils/helper';
+import { getCountryDataByIso2 } from '../../utils/countryCodes';
+import PhoneNumberInput from './PhoneNumberInput';
 
 const styles = StyleSheet.create({
   body: {
-    marginHorizontal: '8%',
-    marginVertical: '8%',
+    paddingHorizontal: '8%',
+    paddingVertical: '20%',
+    height: '100%',
+    justifyContent: 'flex-end',
+  },
+  verticalMarginContainer: {
+    marginVertical: 10,
   },
 });
 
@@ -24,12 +31,18 @@ const Login = () => {
     getLoginData,
   );
 
+  const [countryCode, setCountryCode] = useState('IN');
   const [phoneNumber, setPhoneNumber] = useState('7017711846');
   const [opt, setOtp] = useState('');
 
   const handleLoginRequest = useCallback(() => {
-    dispatch(signinPhoneNumberRequest('+91' + phoneNumber));
-  }, [dispatch, phoneNumber]);
+    const currentSelectedCountry = getCountryDataByIso2(countryCode);
+
+    const phoneNumberWithCode =
+      '+' + currentSelectedCountry?.e164_cc + phoneNumber;
+
+    dispatch(signinPhoneNumberRequest(phoneNumberWithCode));
+  }, [countryCode, phoneNumber, dispatch]);
 
   const handleConfirmOtpRequest = useCallback(() => {
     dispatch(confirmOtpRequest(opt));
@@ -37,27 +50,34 @@ const Login = () => {
 
   return (
     <ImageContainer>
-      <ScrollView contentInsetAdjustmentBehavior="automatic">
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <View style={styles.body}>
           {isNilOrEmpty(confirmation) ? (
             <Fragment>
-              <CustomTextInput
-                autoCompleteType="tel"
-                keyboardType="phone-pad"
-                value={phoneNumber}
-                placeholder="Phone Number"
-                onChangeText={setPhoneNumber}
-              />
+              <View style={styles.verticalMarginContainer}>
+                <PhoneNumberInput
+                  phoneNumber={phoneNumber}
+                  countryCode={countryCode}
+                  setPhoneNumber={setPhoneNumber}
+                  setCountryCode={setCountryCode}
+                />
+              </View>
 
-              <CustomButton
-                text="Send OTP"
-                onPress={handleLoginRequest}
-                loading={signinLoading}
-              />
+              <View style={styles.verticalMarginContainer}>
+                <CustomButton
+                  text="Send OTP"
+                  onPress={() => handleLoginRequest()}
+                  loading={signinLoading}
+                />
+              </View>
             </Fragment>
           ) : (
             <Fragment>
-              <TextInput value={opt} onChangeText={(text) => setOtp(text)} />
+              <CustomTextInput
+                value={opt}
+                onChangeText={(text: string) => setOtp(text)}
+              />
 
               <CustomButton
                 text="Confirm Code"
@@ -67,7 +87,7 @@ const Login = () => {
             </Fragment>
           )}
         </View>
-      </ScrollView>
+      </KeyboardAvoidingView>
     </ImageContainer>
   );
 };
