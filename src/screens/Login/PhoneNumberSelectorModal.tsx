@@ -15,7 +15,7 @@ import { CountriesTypes, searchCountries } from '../../utils/countryCodes';
 const styles = StyleSheet.create({
   phoneNumberSelectorModalContainer: {
     paddingHorizontal: '4%',
-    height: '92%',
+    height: '92.3%',
   },
   backIconContainer: {
     paddingVertical: 12,
