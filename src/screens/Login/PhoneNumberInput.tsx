@@ -1,9 +1,9 @@
-import React, { Fragment, useMemo, useState } from 'react';
-import { StyleSheet, Text, Pressable, Modal } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, { Fragment, useMemo, useState, useCallback } from 'react';
+import { StyleSheet, Text, Pressable } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import CustomTextInput from '../../components/shared/CustomTextInput';
 import { getCountryDataByIso2 } from '../../utils/countryCodes';
+import PhoneNumberSelectorModal from './PhoneNumberSelectorModal';
 
 const styles = StyleSheet.create({
   countryCodeContainer: {
@@ -32,9 +32,17 @@ const PhoneNumberInput = ({
   setPhoneNumber,
   setCountryCode,
 }: PhoneNumberInputTypes) => {
-  const [phoneNumberSelectorModal, setPhoneNumberSelectorModal] = useState(
-    false,
-  );
+  const [
+    isPhoneNumberSelectorModalOpen,
+    setIsPhoneNumberSelectorModalOpen,
+  ] = useState(false);
+
+  const toggleIsPhoneNumberSelectorModalOpen = useCallback(() => {
+    setIsPhoneNumberSelectorModalOpen(
+      (isPhoneNumberSelectorModalOpenLocal) =>
+        !isPhoneNumberSelectorModalOpenLocal,
+    );
+  }, []);
 
   const currentSelectedCountry = useMemo(() => {
     return getCountryDataByIso2(countryCode);
@@ -51,9 +59,7 @@ const PhoneNumberInput = ({
         addsOnComponent={
           <Pressable
             style={styles.countryCodeContainer}
-            onPress={() =>
-              setPhoneNumberSelectorModal(!phoneNumberSelectorModal)
-            }>
+            onPress={() => toggleIsPhoneNumberSelectorModalOpen()}>
             <Text style={styles.countryCodeText}>
               {`${currentSelectedCountry?.unicode} +${currentSelectedCountry?.e164_cc}`}
             </Text>
@@ -63,11 +69,13 @@ const PhoneNumberInput = ({
         }
       />
 
-      <Modal animationType="slide" visible={phoneNumberSelectorModal}>
-        <SafeAreaView>
-          <Text>This is modal</Text>
-        </SafeAreaView>
-      </Modal>
+      <PhoneNumberSelectorModal
+        isPhoneNumberSelectorModalOpen={isPhoneNumberSelectorModalOpen}
+        toggleIsPhoneNumberSelectorModalOpen={
+          toggleIsPhoneNumberSelectorModalOpen
+        }
+        setCountryCode={setCountryCode}
+      />
     </Fragment>
   );
 };

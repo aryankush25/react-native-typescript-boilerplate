@@ -3244,9 +3244,10 @@ const countriesList: CountriesTypes[] = [
   },
 ];
 
-const countries = countriesList.map((country: CountriesTypes) => {
-  return { ...country, unicode: getUnicodeFlagIcon(country.iso2_cc) };
-});
+const countries = countriesList.map((country: CountriesTypes) => ({
+  ...country,
+  unicode: getUnicodeFlagIcon(country.iso2_cc),
+}));
 
 export const getCountryDataByIso2 = (iso2: string) => {
   const countryIndex = _.findIndex(countries, ['iso2_cc', iso2]);
@@ -3257,5 +3258,10 @@ export const getCountryDataByIso2 = (iso2: string) => {
 
   return countries[countryIndex];
 };
+
+export const searchCountries = (searchKeyword: string) =>
+  _.filter(countries, (country: CountriesTypes) =>
+    _.includes(_.toLower(country.display_name), _.toLower(searchKeyword)),
+  );
 
 export default countries;
