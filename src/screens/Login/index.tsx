@@ -1,8 +1,8 @@
 import React, { Fragment, useCallback, useState } from 'react';
-import { ScrollView, View, StyleSheet, Button, TextInput } from 'react-native';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { ScrollView, View, StyleSheet, TextInput, Text } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import CustomButton from '../../components/shared/CustomButton';
+import CustomTextInput from '../../components/shared/CustomTextInput';
 import ImageContainer from '../../container/ImageContainer';
 import {
   signinPhoneNumberRequest,
@@ -13,8 +13,8 @@ import { isNilOrEmpty } from '../../utils/helper';
 
 const styles = StyleSheet.create({
   body: {
-    backgroundColor: Colors.white,
     marginHorizontal: '8%',
+    marginVertical: '8%',
   },
 });
 
@@ -24,11 +24,12 @@ const Login = () => {
     getLoginData,
   );
 
+  const [phoneNumber, setPhoneNumber] = useState('7017711846');
   const [opt, setOtp] = useState('');
 
   const handleLoginRequest = useCallback(() => {
-    dispatch(signinPhoneNumberRequest('+917017711846'));
-  }, [dispatch]);
+    dispatch(signinPhoneNumberRequest('+91' + phoneNumber));
+  }, [dispatch, phoneNumber]);
 
   const handleConfirmOtpRequest = useCallback(() => {
     dispatch(confirmOtpRequest(opt));
@@ -39,14 +40,25 @@ const Login = () => {
       <ScrollView contentInsetAdjustmentBehavior="automatic">
         <View style={styles.body}>
           {isNilOrEmpty(confirmation) ? (
-            <CustomButton
-              text="Send OTP"
-              onPress={handleLoginRequest}
-              loading={signinLoading}
-            />
+            <Fragment>
+              <CustomTextInput
+                autoCompleteType="tel"
+                keyboardType="phone-pad"
+                value={phoneNumber}
+                placeholder="Phone Number"
+                onChangeText={setPhoneNumber}
+              />
+
+              <CustomButton
+                text="Send OTP"
+                onPress={handleLoginRequest}
+                loading={signinLoading}
+              />
+            </Fragment>
           ) : (
             <Fragment>
               <TextInput value={opt} onChangeText={(text) => setOtp(text)} />
+
               <CustomButton
                 text="Confirm Code"
                 onPress={handleConfirmOtpRequest}
