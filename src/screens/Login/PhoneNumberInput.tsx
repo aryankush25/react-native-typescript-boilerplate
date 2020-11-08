@@ -1,5 +1,7 @@
 import React, { Fragment, useMemo, useState } from 'react';
 import { StyleSheet, Text, Pressable, Modal } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import CustomTextInput from '../../components/shared/CustomTextInput';
 import { getCountryDataByIso2 } from '../../utils/countryCodes';
 
@@ -52,12 +54,16 @@ const PhoneNumberInput = ({
             <Text style={styles.countryCodeText}>
               {`${currentSelectedCountry?.unicode} +${currentSelectedCountry?.e164_cc}`}
             </Text>
+
+            <Icon name="rocket" size={30} color="#900" />
           </Pressable>
         }
       />
 
       <Modal animationType="slide" visible={phoneNumberSelectorModal}>
-        <Text>This is modal</Text>
+        <SafeAreaView>
+          <Text>This is modal</Text>
+        </SafeAreaView>
       </Modal>
     </Fragment>
   );
