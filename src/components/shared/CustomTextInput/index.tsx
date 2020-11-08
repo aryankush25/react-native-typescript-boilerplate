@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { TextInput, StyleSheet, View } from 'react-native';
+import { TextInput, StyleSheet, View, Platform } from 'react-native';
 import { isPresent } from '../../../utils/helper';
 
 interface CustomTextInputTypes {
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   customTextInput: {
-    paddingVertical: 8,
+    paddingVertical: Platform.OS === 'ios' ? 12 : 8,
     paddingHorizontal: 10,
     margin: 0,
     flex: 1,

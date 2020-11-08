@@ -32,7 +32,7 @@ const Login = () => {
   );
 
   const [countryCode, setCountryCode] = useState('IN');
-  const [phoneNumber, setPhoneNumber] = useState('7017711846');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [opt, setOtp] = useState('');
 
   const handleLoginRequest = useCallback(() => {

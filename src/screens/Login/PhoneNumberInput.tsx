@@ -7,12 +7,15 @@ import { getCountryDataByIso2 } from '../../utils/countryCodes';
 
 const styles = StyleSheet.create({
   countryCodeContainer: {
+    flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
     flex: 1,
     paddingHorizontal: 8,
   },
   countryCodeText: {
     fontSize: 18,
+    marginRight: 6,
   },
 });
 
@@ -55,7 +58,7 @@ const PhoneNumberInput = ({
               {`${currentSelectedCountry?.unicode} +${currentSelectedCountry?.e164_cc}`}
             </Text>
 
-            <Icon name="rocket" size={30} color="#900" />
+            <Icon name="angle-down" size={20} color="black" />
           </Pressable>
         }
       />
