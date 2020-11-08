@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: 'hidden',
     borderColor: 'grey',
-    elevation: 10,
+    elevation: 4,
     paddingHorizontal: 10,
   },
   customTextInput: {
