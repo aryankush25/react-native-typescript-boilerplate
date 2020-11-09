@@ -1,13 +1,11 @@
 import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import actionTypes from '../actionTypes';
 import { UserDataReducerTypes } from '../../interfaceTypes';
-import { isPresent } from '../../utils/helper';
 
 export interface ActionType {
   type: String;
   payload: {
     currentUser: FirebaseAuthTypes.User | null;
-    confirmation: FirebaseAuthTypes.ConfirmationResult | null;
   };
 }
 
@@ -15,8 +13,8 @@ const initialState: UserDataReducerTypes = {
   initializingCurrentUser: true,
   currentUser: null,
   signinLoading: false,
-  confirmation: null,
   otpConfirmLoading: false,
+  isInvalidOtp: false,
   logoutLoading: false,
 };
 
@@ -29,7 +27,6 @@ function userData(state = initialState, action: ActionType) {
         ...state,
         initializingCurrentUser: false,
         currentUser: payload.currentUser,
-        ...(isPresent(payload.currentUser) && { confirmation: null }),
       };
     }
 
@@ -37,21 +34,18 @@ function userData(state = initialState, action: ActionType) {
       return {
         ...state,
         signinLoading: true,
-        confirmation: null,
       };
     }
     case actionTypes.SIGNIN_PHONE_NUMBER_SUCCESS: {
       return {
         ...state,
         signinLoading: false,
-        confirmation: payload.confirmation,
       };
     }
     case actionTypes.SIGNIN_PHONE_NUMBER_FAILURE: {
       return {
         ...state,
         signinLoading: false,
-        confirmation: null,
       };
     }
 
@@ -66,7 +60,13 @@ function userData(state = initialState, action: ActionType) {
       return {
         ...state,
         otpConfirmLoading: false,
-        confirmation: null,
+      };
+    }
+
+    case actionTypes.TOGGLE_IS_INVALID_OPT: {
+      return {
+        ...state,
+        isInvalidOtp: !state.isInvalidOtp,
       };
     }
 

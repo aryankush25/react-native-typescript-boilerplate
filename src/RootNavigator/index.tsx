@@ -3,12 +3,14 @@ import { useSelector } from 'react-redux';
 import { createStackNavigator } from '@react-navigation/stack';
 import SplashScreen from '../screens/SplashScreen';
 import Login from '../screens/Login';
+import Verification from '../screens/Verification';
 import Home from '../screens/Home';
+import * as navigationConstants from '../utils/navigationConstants';
 import { isNilOrEmpty } from '../utils/helper';
 import { useCurrentUserAuthHook } from './hooks';
 import { getCurrentUserData } from '../store/selectors/userSelectors';
 
-const Stack = createStackNavigator();
+const { Navigator, Screen } = createStackNavigator();
 
 const RootNavigator = () => {
   useCurrentUserAuthHook();
@@ -23,16 +25,23 @@ const RootNavigator = () => {
 
   if (isNilOrEmpty(currentUser)) {
     return (
-      <Stack.Navigator initialRouteName="Login" headerMode="none">
-        <Stack.Screen name="Login" component={Login} />
-      </Stack.Navigator>
+      <Navigator
+        initialRouteName={navigationConstants.LOGIN_SCREEN}
+        headerMode="none">
+        <Screen name={navigationConstants.LOGIN_SCREEN} component={Login} />
+
+        <Screen
+          name={navigationConstants.VERIFICATION_SCREEN}
+          component={Verification}
+        />
+      </Navigator>
     );
   }
 
   return (
-    <Stack.Navigator initialRouteName="Home">
-      <Stack.Screen name="Home" component={Home} />
-    </Stack.Navigator>
+    <Navigator initialRouteName={navigationConstants.HOME_SCREEN}>
+      <Screen name={navigationConstants.HOME_SCREEN} component={Home} />
+    </Navigator>
   );
 };
 

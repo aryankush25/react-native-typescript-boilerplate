@@ -22,6 +22,12 @@ function push(name: string, params?: object | undefined) {
   }
 }
 
-const RootNavigation = { navigate, push };
+function goBack() {
+  if (isReadyRef.current && navigationRef.current) {
+    navigationRef.current.goBack();
+  }
+}
+
+const RootNavigation = { navigate, push, goBack };
 
 export default RootNavigation;

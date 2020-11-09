@@ -1,15 +1,27 @@
+import React from 'react';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
-import { takeLatest, put, select } from 'redux-saga/effects';
+import { takeLatest, put } from 'redux-saga/effects';
 import actionTypes from '../actionTypes';
 import {
   signinPhoneNumberSuccess,
   signinPhoneNumberFailure,
   confirmOtpSuccess,
   confirmOtpFailure,
+  toggleIsInvalidOtp,
   logoutSuccess,
   logoutFailure,
 } from '../actions/userDataActions';
-import { getLoginData } from '../selectors/userSelectors';
+import RootNavigation from '../../utils/RootNavigation';
+import * as navigationConstants from '../../utils/navigationConstants';
+import { isPresent } from '../../utils/helper';
+
+const confirmationRef = React.createRef<FirebaseAuthTypes.ConfirmationResult | null>();
+
+export function setConfirmation(
+  confirmation: FirebaseAuthTypes.ConfirmationResult | null,
+) {
+  (confirmationRef as React.MutableRefObject<FirebaseAuthTypes.ConfirmationResult | null>).current = confirmation;
+}
 
 interface SigninPhoneNumberActionType {
   type: String;
@@ -31,11 +43,13 @@ function* signinPhoneNumberAsync(action: SigninPhoneNumberActionType) {
       payload: { phoneNumber },
     } = action;
 
-    const confirmation: FirebaseAuthTypes.ConfirmationResult | null = yield auth().signInWithPhoneNumber(
-      phoneNumber,
-    );
+    const confirmation = yield auth().signInWithPhoneNumber(phoneNumber);
 
-    yield put(signinPhoneNumberSuccess(confirmation));
+    setConfirmation(confirmation);
+
+    RootNavigation.push(navigationConstants.VERIFICATION_SCREEN);
+
+    yield put(signinPhoneNumberSuccess());
   } catch (error) {
     console.log(error);
     yield put(signinPhoneNumberFailure());
@@ -48,13 +62,25 @@ function* confirmOptAsync(action: ConfirmOtpActionType) {
       payload: { otp },
     } = action;
 
-    const { confirmation } = yield select(getLoginData);
+    const confirmation = confirmationRef.current;
 
-    confirmation && (yield confirmation.confirm(otp));
+    if (isPresent(confirmation)) {
+      yield confirmation?.confirm(otp);
 
-    yield put(confirmOtpSuccess());
+      setConfirmation(null);
+
+      yield put(confirmOtpSuccess());
+    } else {
+      throw new Error('Confirmation object not present');
+    }
   } catch (error) {
-    console.log(error);
+    if (error.code === 'auth/invalid-verification-code') {
+      yield put(toggleIsInvalidOtp());
+    } else {
+      setConfirmation(null);
+      RootNavigation.goBack();
+    }
+
     yield put(confirmOtpFailure());
   }
 }

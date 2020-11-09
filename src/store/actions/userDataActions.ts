@@ -15,12 +15,9 @@ export const signinPhoneNumberRequest = (phoneNumber: string) => {
   };
 };
 
-export const signinPhoneNumberSuccess = (
-  confirmation: FirebaseAuthTypes.ConfirmationResult | null,
-) => {
+export const signinPhoneNumberSuccess = () => {
   return {
     type: actionTypes.SIGNIN_PHONE_NUMBER_SUCCESS,
-    payload: { confirmation },
   };
 };
 
@@ -43,6 +40,12 @@ export const confirmOtpSuccess = () => {
 
 export const confirmOtpFailure = () => {
   return { type: actionTypes.CONFIRM_OTP_FAILURE };
+};
+
+export const toggleIsInvalidOtp = () => {
+  return {
+    type: actionTypes.TOGGLE_IS_INVALID_OPT,
+  };
 };
 
 export const logoutRequest = () => {
