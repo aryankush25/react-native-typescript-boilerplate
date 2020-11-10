@@ -74,7 +74,9 @@ const Verification = () => {
   const navigation = useNavigation();
   const route = useRoute();
 
-  const [otpArray, setOtp] = useState(['', '', '', '', '', '']);
+  const otpLength = 6;
+
+  const [otpArray, setOtp] = useState(_.fill(Array(otpLength), ''));
   const otpInputRef: any = useRef([]);
 
   const { otpConfirmLoading } = useSelector(getLoginData);
