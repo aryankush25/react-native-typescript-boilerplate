@@ -1,9 +1,17 @@
-import React, { ReactNode } from 'react';
-import { TextInput, StyleSheet, View, Platform } from 'react-native';
+import React, { ReactNode, useMemo } from 'react';
+import {
+  TextInput,
+  StyleSheet,
+  View,
+  Platform,
+  NativeSyntheticEvent,
+  TextInputKeyPressEventData,
+} from 'react-native';
 import { isPresent } from '../../../utils/helper';
 
 interface CustomTextInputTypes {
   value: string;
+  inputRef?: any;
   autoCompleteType?:
     | 'cc-csc'
     | 'cc-exp'
@@ -35,42 +43,81 @@ interface CustomTextInputTypes {
     | 'web-search'
     | undefined;
   placeholder?: string;
+  elevation?: boolean;
+  borderColor?: string;
+  fontSize?: number;
+  textAlignCenter?: boolean;
+  fontBold?: boolean;
+  caretHidden?: boolean;
   addsOnComponent?: ReactNode;
-  onChangeText: Function;
+  onChangeText?: Function;
+  onKeyPress?: (e: NativeSyntheticEvent<TextInputKeyPressEventData>) => void;
+  onFocus?: Function;
 }
 
-const styles = StyleSheet.create({
-  customTextInputContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    backgroundColor: 'white',
-    borderRadius: 10,
-    overflow: 'hidden',
-    borderColor: 'grey',
-    elevation: 4,
-    paddingHorizontal: 10,
-  },
-  customTextInput: {
-    paddingVertical: Platform.OS === 'ios' ? 12 : 8,
-    paddingHorizontal: 10,
-    margin: 0,
-    flex: 1,
-    fontSize: 16,
-  },
-  addsOnComponent: {
-    height: '100%',
-  },
-});
+const getStyleSheet = (
+  elevation: boolean,
+  borderColor: string,
+  fontSize: number,
+  textAlignCenter: boolean,
+  fontBold: boolean,
+) => {
+  const styles = StyleSheet.create({
+    customTextInputContainer: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'row',
+      backgroundColor: 'white',
+      borderRadius: 10,
+      overflow: 'hidden',
+      borderWidth: 1.2,
+      borderColor,
+      ...(elevation && { elevation: 4 }),
+      paddingHorizontal: 10,
+    },
+    customTextInput: {
+      paddingVertical: Platform.OS === 'ios' ? 12 : 8,
+      margin: 0,
+      flex: 1,
+      fontSize,
+      ...(fontBold && { fontWeight: 'bold' }),
+      ...(textAlignCenter && { textAlign: 'center' }),
+    },
+    addsOnComponent: {
+      height: '100%',
+    },
+  });
+
+  return styles;
+};
 
 const CustomTextInput = ({
   value,
+  inputRef,
   autoCompleteType,
   keyboardType,
   placeholder,
+  elevation = true,
+  borderColor = '#f5f5f5',
+  fontSize = 16,
+  fontBold = false,
+  textAlignCenter = false,
+  caretHidden = false,
   addsOnComponent,
   onChangeText,
+  onKeyPress = () => {},
+  onFocus,
 }: CustomTextInputTypes) => {
+  const styles = useMemo(() => {
+    return getStyleSheet(
+      elevation,
+      borderColor,
+      fontSize,
+      textAlignCenter,
+      fontBold,
+    );
+  }, [borderColor, elevation, fontSize, textAlignCenter, fontBold]);
+
   return (
     <View style={styles.customTextInputContainer}>
       {isPresent(addsOnComponent) && (
@@ -79,12 +126,16 @@ const CustomTextInput = ({
 
       <TextInput
         value={value}
+        ref={inputRef}
         autoCorrect={false}
         autoCompleteType={autoCompleteType}
         keyboardType={keyboardType}
         placeholder={placeholder}
+        caretHidden={caretHidden}
         style={styles.customTextInput}
-        onChangeText={(text: string) => onChangeText(text)}
+        onChangeText={(text: string) => onChangeText && onChangeText(text)}
+        onKeyPress={onKeyPress}
+        onFocus={() => onFocus && onFocus()}
       />
     </View>
   );

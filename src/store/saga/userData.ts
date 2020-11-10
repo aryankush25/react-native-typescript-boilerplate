@@ -47,7 +47,9 @@ function* signinPhoneNumberAsync(action: SigninPhoneNumberActionType) {
 
     setConfirmation(confirmation);
 
-    RootNavigation.push(navigationConstants.VERIFICATION_SCREEN);
+    RootNavigation.push(navigationConstants.VERIFICATION_SCREEN, {
+      phoneNumber,
+    });
 
     yield put(signinPhoneNumberSuccess());
   } catch (error) {
