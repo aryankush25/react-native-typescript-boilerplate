@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { View, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import CustomButton from '../../components/shared/CustomButton';
@@ -27,14 +27,19 @@ const Login = () => {
   const [countryCode, setCountryCode] = useState('IN');
   const [phoneNumber, setPhoneNumber] = useState('');
 
-  const handleLoginRequest = useCallback(() => {
+  const { phoneNumberWithCode, isValidNumberLength } = useMemo(() => {
     const currentSelectedCountry = getCountryDataByIso2(countryCode);
 
-    const phoneNumberWithCode =
-      '+' + currentSelectedCountry?.e164_cc + phoneNumber;
+    return {
+      phoneNumberWithCode: '+' + currentSelectedCountry?.e164_cc + phoneNumber,
+      isValidNumberLength:
+        currentSelectedCountry?.example.length === phoneNumber.length,
+    };
+  }, [countryCode, phoneNumber]);
 
+  const handleLoginRequest = useCallback(() => {
     dispatch(signinPhoneNumberRequest(phoneNumberWithCode));
-  }, [countryCode, phoneNumber, dispatch]);
+  }, [dispatch, phoneNumberWithCode]);
 
   return (
     <ImageContainer>
@@ -53,7 +58,7 @@ const Login = () => {
           <View style={styles.verticalMarginContainer}>
             <CustomButton
               text="Send OTP"
-              onPress={() => handleLoginRequest()}
+              onPress={() => isValidNumberLength && handleLoginRequest()}
               loading={signinLoading}
             />
           </View>
