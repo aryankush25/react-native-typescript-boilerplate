@@ -11,7 +11,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
-    paddingHorizontal: 8,
+    paddingLeft: 8,
+    paddingRight: 12,
   },
   countryCodeText: {
     fontSize: 18,

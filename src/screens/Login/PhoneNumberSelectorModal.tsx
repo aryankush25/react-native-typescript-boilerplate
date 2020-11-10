@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
   searchIconContainer: {
     justifyContent: 'center',
     flex: 1,
+    paddingRight: 12,
   },
   headingText: {
     fontSize: 20,
