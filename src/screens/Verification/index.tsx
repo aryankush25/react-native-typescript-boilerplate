@@ -21,7 +21,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import CustomTextInput from '../../components/shared/CustomTextInput';
-import { confirmOtpRequest } from '../../store/actions/userDataActions';
+import {
+  confirmOtpRequest,
+  toggleIsInvalidOtp,
+} from '../../store/actions/userDataActions';
 import { getLoginData } from '../../store/selectors/userSelectors';
 import { isNilOrEmpty, isPresent } from '../../utils/helper';
 
@@ -67,6 +70,10 @@ const styles = StyleSheet.create({
   activityIndicatorContainer: {
     marginVertical: 30,
   },
+  invalidOtpText: {
+    color: 'red',
+    textAlign: 'center',
+  },
 });
 
 const Verification = () => {
@@ -79,7 +86,7 @@ const Verification = () => {
   const [otpArray, setOtp] = useState(_.fill(Array(otpLength), ''));
   const otpInputRef: any = useRef([]);
 
-  const { otpConfirmLoading } = useSelector(getLoginData);
+  const { otpConfirmLoading, isInvalidOtp } = useSelector(getLoginData);
 
   const currentPosition = useMemo(() => {
     let pos = 0;
@@ -139,11 +146,15 @@ const Verification = () => {
 
   const onKeyPress = useCallback(
     (value: string) => {
+      if (isInvalidOtp) {
+        dispatch(toggleIsInvalidOtp());
+      }
+
       if (value === 'Backspace' || (Number(value) >= 0 && Number(value) <= 9)) {
         setOtpArray(value);
       }
     },
-    [setOtpArray],
+    [dispatch, isInvalidOtp, setOtpArray],
   );
 
   useEffect(() => {
@@ -193,7 +204,11 @@ const Verification = () => {
                   keyboardType="number-pad"
                   elevation={false}
                   borderColor={
-                    isPresent(singleOtp) || index === 0 ? 'black' : '#f5f5f5'
+                    isInvalidOtp
+                      ? 'red'
+                      : isPresent(singleOtp) || index === 0
+                      ? 'black'
+                      : '#f5f5f5'
                   }
                   fontBold
                   textAlignCenter
@@ -220,6 +235,12 @@ const Verification = () => {
         </View>
 
         <View style={styles.activityIndicatorContainer}>
+          {isInvalidOtp && (
+            <Text style={styles.invalidOtpText}>
+              The OTP you entered is Invalid. Please try again!!
+            </Text>
+          )}
+
           <ActivityIndicator
             animating={otpConfirmLoading}
             size="large"

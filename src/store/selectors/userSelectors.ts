@@ -8,4 +8,5 @@ export const getCurrentUserData = (state: StoreState) => ({
 export const getLoginData = (state: StoreState) => ({
   signinLoading: state.userData.signinLoading,
   otpConfirmLoading: state.userData.otpConfirmLoading,
+  isInvalidOtp: state.userData.isInvalidOtp,
 });
