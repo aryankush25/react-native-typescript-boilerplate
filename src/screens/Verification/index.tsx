@@ -13,6 +13,7 @@ import {
   ActivityIndicator,
   NativeSyntheticEvent,
   TextInputKeyPressEventData,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -134,6 +135,15 @@ const Verification = () => {
     [currentPosition],
   );
 
+  const onKeyPress = useCallback(
+    (value: string) => {
+      if (value === 'Backspace' || (Number(value) >= 0 && Number(value) <= 9)) {
+        setOtpArray(value);
+      }
+    },
+    [setOtpArray],
+  );
+
   useEffect(() => {
     otpInputRef.current[currentPosition].focus();
   }, [currentPosition]);
@@ -186,17 +196,17 @@ const Verification = () => {
                   fontBold
                   textAlignCenter
                   caretHidden
+                  onChangeText={(text: string) => {
+                    if (Platform.OS === 'android') {
+                      onKeyPress(text);
+                    }
+                  }}
                   onKeyPress={(
                     e: NativeSyntheticEvent<TextInputKeyPressEventData>,
                   ) => {
                     const value = e.nativeEvent.key;
 
-                    if (
-                      value === 'Backspace' ||
-                      (Number(value) >= 0 && Number(value) <= 9)
-                    ) {
-                      setOtpArray(e.nativeEvent.key);
-                    }
+                    onKeyPress(value);
                   }}
                   onFocus={() => {
                     otpInputRef.current[currentPosition].focus();
