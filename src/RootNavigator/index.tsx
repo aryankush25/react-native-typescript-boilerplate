@@ -39,10 +39,7 @@ const RootNavigator = () => {
     );
   }
 
-  if (
-    isNilOrEmpty(currentUser?.displayName) ||
-    isNilOrEmpty(currentUser?.email)
-  ) {
+  if (isNilOrEmpty(currentUser?.displayName)) {
     return (
       <Navigator
         initialRouteName={navigationConstants.ON_BOARDING_SCREEN}

@@ -15,6 +15,7 @@ const initialState: UserDataReducerTypes = {
   signinLoading: false,
   otpConfirmLoading: false,
   isInvalidOtp: false,
+  updatingProfileLoading: false,
   logoutLoading: false,
 };
 
@@ -67,6 +68,20 @@ function userData(state = initialState, action: ActionType) {
       return {
         ...state,
         isInvalidOtp: !state.isInvalidOtp,
+      };
+    }
+
+    case actionTypes.UPDATE_USER_PROFILE_REQUEST: {
+      return {
+        ...state,
+        updatingProfileLoading: true,
+      };
+    }
+    case actionTypes.UPDATE_USER_PROFILE_SUCCESS:
+    case actionTypes.UPDATE_USER_PROFILE_FAILURE: {
+      return {
+        ...state,
+        updatingProfileLoading: false,
       };
     }
 

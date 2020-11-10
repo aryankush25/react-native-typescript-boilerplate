@@ -6,5 +6,6 @@ export interface UserDataReducerTypes {
   signinLoading: boolean;
   otpConfirmLoading: boolean;
   isInvalidOtp: boolean;
+  updatingProfileLoading: boolean;
   logoutLoading: boolean;
 }

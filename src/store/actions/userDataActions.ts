@@ -48,6 +48,28 @@ export const toggleIsInvalidOtp = () => {
   };
 };
 
+export const updateUserProfileRequest = (username: string, email: string) => {
+  return {
+    type: actionTypes.UPDATE_USER_PROFILE_REQUEST,
+    payload: {
+      username,
+      email,
+    },
+  };
+};
+
+export const updateUserProfileSuccess = () => {
+  return {
+    type: actionTypes.UPDATE_USER_PROFILE_SUCCESS,
+  };
+};
+
+export const updateUserProfileFailure = () => {
+  return {
+    type: actionTypes.UPDATE_USER_PROFILE_FAILURE,
+  };
+};
+
 export const logoutRequest = () => {
   return {
     type: actionTypes.LOGOUT_REQUEST,

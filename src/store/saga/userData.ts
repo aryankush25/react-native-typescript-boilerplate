@@ -1,6 +1,6 @@
 import React from 'react';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
-import { takeLatest, put } from 'redux-saga/effects';
+import { takeLatest, put, all } from 'redux-saga/effects';
 import actionTypes from '../actionTypes';
 import {
   signinPhoneNumberSuccess,
@@ -10,6 +10,8 @@ import {
   toggleIsInvalidOtp,
   logoutSuccess,
   logoutFailure,
+  updateUserProfileSuccess,
+  updateUserProfileFailure,
 } from '../actions/userDataActions';
 import RootNavigation from '../../utils/RootNavigation';
 import * as navigationConstants from '../../utils/navigationConstants';
@@ -17,7 +19,7 @@ import { isPresent } from '../../utils/helper';
 
 const confirmationRef = React.createRef<FirebaseAuthTypes.ConfirmationResult | null>();
 
-export function setConfirmation(
+function setConfirmation(
   confirmation: FirebaseAuthTypes.ConfirmationResult | null,
 ) {
   (confirmationRef as React.MutableRefObject<FirebaseAuthTypes.ConfirmationResult | null>).current = confirmation;
@@ -34,6 +36,14 @@ interface ConfirmOtpActionType {
   type: String;
   payload: {
     otp: string;
+  };
+}
+
+interface UpdateUserProfileActionType {
+  type: String;
+  payload: {
+    username: string;
+    email: string;
   };
 }
 
@@ -87,6 +97,20 @@ function* confirmOptAsync(action: ConfirmOtpActionType) {
   }
 }
 
+function* updateUserProfileAsync(action: UpdateUserProfileActionType) {
+  try {
+    const {
+      payload: { username },
+    } = action;
+
+    yield all([auth().currentUser?.updateProfile({ displayName: username })]);
+
+    yield put(updateUserProfileSuccess());
+  } catch (error) {
+    yield put(updateUserProfileFailure());
+  }
+}
+
 export function* logoutAsync() {
   try {
     yield auth().signOut();
@@ -100,5 +124,6 @@ export function* logoutAsync() {
 export default [
   takeLatest(actionTypes.SIGNIN_PHONE_NUMBER_REQUEST, signinPhoneNumberAsync),
   takeLatest(actionTypes.CONFIRM_OTP_REQUEST, confirmOptAsync),
+  takeLatest(actionTypes.UPDATE_USER_PROFILE_REQUEST, updateUserProfileAsync),
   takeLatest(actionTypes.LOGOUT_REQUEST, logoutAsync),
 ];

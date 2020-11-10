@@ -1,9 +1,12 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TextInput, DefaultTheme } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
 import CustomButton from '../../components/shared/CustomButton';
 import { isNilOrEmpty } from '../../utils/helper';
+import { updateUserProfileRequest } from '../../store/actions/userDataActions';
+import { getUserProfileData } from '../../store/selectors/userSelectors';
 
 const theme = {
   ...DefaultTheme,
@@ -35,12 +38,20 @@ const styles = StyleSheet.create({
 });
 
 const OnBoarding = () => {
+  const dispatch = useDispatch();
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
 
+  const { updatingProfileLoading } = useSelector(getUserProfileData);
+
   const disabledButton = useMemo(() => {
-    return isNilOrEmpty(name) || isNilOrEmpty(email);
-  }, [name, email]);
+    return isNilOrEmpty(name);
+  }, [name]);
+
+  const handleUserProfileUpdate = useCallback(() => {
+    dispatch(updateUserProfileRequest(name, email));
+  }, [dispatch, email, name]);
 
   return (
     <SafeAreaView>
@@ -59,6 +70,7 @@ const OnBoarding = () => {
           <TextInput
             label="Name"
             autoCapitalize="words"
+            autoCompleteType="name"
             value={name}
             selectionColor="#ff6786"
             theme={theme}
@@ -70,6 +82,7 @@ const OnBoarding = () => {
           <TextInput
             label="Email"
             autoCapitalize="none"
+            autoCompleteType="email"
             value={email}
             keyboardType="email-address"
             selectionColor="#ff6786"
@@ -83,7 +96,8 @@ const OnBoarding = () => {
             type="secondary"
             text="Continue"
             disabled={disabledButton}
-            onPress={() => {}}
+            loading={updatingProfileLoading}
+            onPress={() => handleUserProfileUpdate()}
           />
         </View>
       </View>

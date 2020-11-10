@@ -10,3 +10,7 @@ export const getLoginData = (state: StoreState) => ({
   otpConfirmLoading: state.userData.otpConfirmLoading,
   isInvalidOtp: state.userData.isInvalidOtp,
 });
+
+export const getUserProfileData = (state: StoreState) => ({
+  updatingProfileLoading: state.userData.updatingProfileLoading,
+});
