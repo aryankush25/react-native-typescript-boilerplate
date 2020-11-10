@@ -44,7 +44,9 @@ const RootNavigator = () => {
     isNilOrEmpty(currentUser?.email)
   ) {
     return (
-      <Navigator initialRouteName={navigationConstants.ON_BOARDING_SCREEN}>
+      <Navigator
+        initialRouteName={navigationConstants.ON_BOARDING_SCREEN}
+        headerMode="none">
         <Screen
           name={navigationConstants.ON_BOARDING_SCREEN}
           component={OnBoarding}
