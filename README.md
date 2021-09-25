@@ -1,4 +1,4 @@
-# My_Music_App
+# React-Native-Typescript-Boilerplate
 
 > #### **_Note: Please do not use `npm` to manage dependencies. Use :heart:`yarn`:heart: instead. We use `yarn` because of better performance for all developers._**
 
@@ -13,7 +13,7 @@ brew install watchman
 
 sudo gem install cocoapods
 
-git clone https://github.com/aryankush25/My_Music_App.git  # Clone the project
+git clone https://github.com/aryankush25/react-native-typescript-boilerplate.git  # Clone the project
 
 ```
 
